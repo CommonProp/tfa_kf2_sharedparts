@@ -167,7 +167,7 @@ function SWEP:KF2DropMag(handValue)  -- CALL ONLY IN PREDICTED HOOKS/FUNCTIONS L
             
     util.Effect("tfa_kf2_dropped_mag", efdata)
 end
- 
+
 function SWEP:PreDrawViewModel(...)
 	render.UpdateScreenEffectTexture()
 
