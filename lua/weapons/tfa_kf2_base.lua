@@ -251,7 +251,6 @@ function SWEP:Holster(...)
 end
 
 function SWEP:ChooseIdleAnim(...)
-    -- Check if the owner is valid and a player
     if IsValid(self:GetOwner()) and self:GetOwner():IsPlayer() then
         if self:GetIronSightsProgress() >= 0.01 then
             self:SetNWFloat("LastIdleInspect", CurTime() + self.IdleInspectDelay)
@@ -267,9 +266,6 @@ function SWEP:ChooseIdleAnim(...)
         else
             return BaseClass.ChooseIdleAnim(self, ...)
         end
-    else
-        -- If the owner is not valid or not a player, default to base class behavior
-        return BaseClass.ChooseIdleAnim(self, ...)
     end
 end
 
