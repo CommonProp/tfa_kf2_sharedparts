@@ -1,0 +1,8 @@
+"UnlitGeneric"
+
+{
+	"$basetexture"	"kf2/reddot_reticle"
+	"$translucent" 	"1"
+	"$additive"	"1"
+	"$ignorez" "0"
+}

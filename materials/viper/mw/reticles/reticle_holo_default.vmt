@@ -1,0 +1,9 @@
+"UnlitGeneric"
+
+{
+	"$basetexture"	"viper/mw/reticles/reticle_holo_default"
+	"$translucent" 	"1"
+	"$additive"	"1"
+	"$ignorez" "0"
+	"$vertexalpha" "1"
+}

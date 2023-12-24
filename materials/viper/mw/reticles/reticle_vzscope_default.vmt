@@ -1,0 +1,8 @@
+"UnlitGeneric"
+
+{
+	"$basetexture"	"viper/mw/reticles/reticle_vzscope_default"
+	"$translucent"	"1"
+	"$additive"	"0"
+	"$ignorez" "1"
+}

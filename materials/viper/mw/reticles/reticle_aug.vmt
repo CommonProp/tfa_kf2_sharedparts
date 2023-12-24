@@ -1,0 +1,8 @@
+"UnlitGeneric"
+
+{
+	"$basetexture"	"viper/mw/reticles/reticle_aug"
+	//"$alphatest"	"1"
+	"$translucent" "1"
+	"$ignorez" "1"
+}

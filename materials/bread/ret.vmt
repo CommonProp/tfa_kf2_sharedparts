@@ -1,0 +1,20 @@
+"UnLitGeneric"
+{
+	$basetexture "bread/ret"
+	$translucent 1
+	$angleupscale 0
+	Proxies
+	{
+		LinearRamp
+		{
+			rate 50
+			initialValue 0
+			resultVar $angleupscale
+		}
+		TextureTransform
+		{
+			rotateVar $angleupscale
+			resultVar $basetexturetransform
+		}
+	}
+}

@@ -1,0 +1,8 @@
+"UnlitGeneric"
+{
+	"$basetexture"	"viper/shared/reticles/aimpoint_crosshair"
+	"$basetexturetransform ""center .5 .5 scale .25 .25 rotate 0 translate 0 0"
+	"$translucent" 	"1"
+	"$additive" "1"
+	"$ignorez" "1"
+}

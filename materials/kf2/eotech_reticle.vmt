@@ -1,0 +1,8 @@
+"UnlitGeneric"
+
+{
+	"$basetexture"	"kf2/eotech_reticle"
+	"$translucent" 	"1"
+	"$additive"	"1"
+	"$ignorez" "0"
+}
