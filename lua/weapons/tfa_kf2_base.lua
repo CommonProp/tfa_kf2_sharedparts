@@ -50,12 +50,11 @@ SWEP.UseHands = true --Use gmod c_arms system.
 SWEP.VMPos_Additive = false --Set to false for an easier time using VMPos. If true, VMPos will act as a constant delta ON TOP OF ironsights, run, whateverelse
 
 SWEP.HolsterSound = Sound("TFA_KF2.Generic.ClothMedium")
-SWEP.IronInSound = nil --Sound to play when ironsighting in?  nil for default
-SWEP.IronOutSound = nil --Sound to play when ironsighting out?  nil for default
 SWEP.PickupSound = Sound("TFA_KF2.Generic.PickupWeapon")
 
 SWEP.LuaShellEject = true --Enable shell ejection through lua?
 SWEP.LuaShellEjectDelay = 0.002 --The delay to actually eject things
+SWEP.ShellScale = 1
 SWEP.Primary.Sound_DryFire = Sound("TFA_KF2.AK12.DryFire")
 
 SWEP.Primary.EchoFire = nil -- Echo firing sound. Unlike looped firing sounds, this sound will play EACH TIME the gun is fired.
