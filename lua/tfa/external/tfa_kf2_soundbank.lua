@@ -409,6 +409,62 @@ do -- 9mm
 	}, ")")
 end 
 
+do -- Deagle
+	path = basepath .. "WEP_SA_DesertEagle/"
+	path1 = basepath .. "WEP_Distant/"
+	pref = basepref .. "DesertEagle"
+
+	TFA.AddFireSound(pref .. ".Fire", {
+		path .. "DE_Shot_Medium_1.ogg",
+		path .. "DE_Shot_Medium_2.ogg",
+		path .. "DE_Shot_Medium_3.ogg", 
+		path .. "DE_Shot_Medium_3.ogg",
+		path .. "DE_Shot_Small_1.ogg",
+		path .. "DE_Shot_Small_2.ogg",
+		path .. "DE_Shot_Small_3.ogg", 
+		path .. "DE_Shot_Small_4.ogg",
+	}, true, "^"  )
+
+	TFA.AddSound(pref .. ".MagOut", CHAN_AUTO, 0.6, 75, 90, {
+		path .. "WEP_SA_9mm_Handling_MagOut_01.ogg",
+		path .. "WEP_SA_9mm_Handling_MagOut_03.ogg",
+		path .. "WEP_SA_9mm_Handling_MagOut_03.ogg",
+	}, ")")
+	TFA.AddSound(pref .. ".MagInA", CHAN_AUTO, 0.6, 75, 90, {
+		path .. "WEP_SA_9mm_Handling_MagInA_01.ogg",
+		path .. "WEP_SA_9mm_Handling_MagInA_02.ogg",
+		path .. "WEP_SA_9mm_Handling_MagInA_03.ogg",
+	}, ")")
+	TFA.AddSound(pref .. ".MagInB", CHAN_AUTO, 0.6, 75, 90, {
+		path .. "WEP_SA_9mm_Handling_MagInB_01.ogg",
+		path .. "WEP_SA_9mm_Handling_MagInB_02.ogg",
+		path .. "WEP_SA_9mm_Handling_MagInB_03.ogg",
+	}, ")")
+	TFA.AddSound(pref .. ".SlideBack", CHAN_AUTO, 0.6, 75, 90, {
+		path .. "WEP_SA_9mm_Handling_SlideOpen_01.ogg",
+		path .. "WEP_SA_9mm_Handling_SlideOpen_02.ogg",
+		path .. "WEP_SA_9mm_Handling_SlideOpen_03.ogg",
+	}, ")")
+	TFA.AddSound(pref .. ".SlideForward", CHAN_AUTO, 0.6, 75, 90, {
+		path .. "WEP_SA_9mm_Handling_SlideClose_01.ogg",
+		path .. "WEP_SA_9mm_Handling_SlideClose_02.ogg",
+		path .. "WEP_SA_9mm_Handling_SlideClose_03.ogg",
+	}, ")") 
+
+	TFA.AddFireSound(pref .. ".EchoFire", {
+--		path1 .. "WEP_SA_9mm_Echo_Outdoor_01.ogg",
+--		path1 .. "WEP_SA_9mm_Echo_Outdoor_02.ogg",
+--		path1 .. "WEP_SA_9mm_Echo_Outdoor_03.ogg", 
+--		path1 .. "WEP_SA_9mm_Echo_Outdoor_04.ogg", bad for auto and doesn't fit in general
+		path1 .. "WEP_SA_9mm_Echo_Outdoor_05.ogg", 
+		path1 .. "WEP_SA_9mm_Echo_Outdoor_06.ogg", 
+		path1 .. "WEP_SA_9mm_Echo_Outdoor_07.ogg", 
+		path1 .. "WEP_SA_9mm_Echo_Outdoor_08.ogg"
+	}, true, "^"  )
+
+	TFA.AddSound(pref .. ".Deploy", CHAN_AUTO, 0.6, 75, 100, path .. "WEP_SA_.ogg" )
+end
+
 do -- 9mm
 	path = basepath .. "WEP_1911/"
 	path1 = basepath .. "WEP_Distant/"
