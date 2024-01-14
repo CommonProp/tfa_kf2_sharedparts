@@ -319,7 +319,7 @@ function SWEP:ChooseIdleAnim()
 	--end
 	
     -- Define a list of animations to check
-    local animationsToCheck = {"reload", "shoot", "bash", "out", "equip", "put", "iron", "atk", "settle", "combo", "block"}
+    local animationsToCheck = {"reload", "shoot", "bash", "equip", "put", "atk", "settle", "combo", "block"}
 
     -- Check if the current activity is in the defined list
     if IsValid(self) and IsValid(self:GetOwner()) and self:GetOwner():IsPlayer() then

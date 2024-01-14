@@ -258,7 +258,6 @@ end
 
 SWEP.PlayChosenAnimation = PlayChosenAnimation
 
-
 function SWEP:ChooseIdleAnim()
 	local self2 = self:GetTable()
 	if not self2.VMIV(self) then return false, 0 end
@@ -268,7 +267,7 @@ function SWEP:ChooseIdleAnim()
 	--end
 	
     -- Define a list of animations to check
-    local animationsToCheck = {"reload", "shoot", "bash", "out", "equip", "put", "iron", "atk", "settle", "combo"}
+    local animationsToCheck = {"reload", "shoot", "bash", "equip", "put", "atk", "settle", "combo", "block"}
 
     -- Check if the current activity is in the defined list
     if IsValid(self) and IsValid(self:GetOwner()) and self:GetOwner():IsPlayer() then
@@ -326,6 +325,8 @@ function SWEP:ChooseIdleAnim()
 		else
 			return self:ChooseADSAnim()
 		end
+	elseif self.CanBlock and self:GetStatus() == TFA.Enum.STATUS_BLOCKING and self.BlockAnimation["loop"] then
+     	return self:PlayAnimation(self.BlockAnimation["loop"]) 
 	elseif self:GetSprinting() and self2.GetStatL(self, "Sprint_Mode") ~= TFA.Enum.LOCOMOTION_LUA then
 		return self:ChooseSprintAnim()
 	elseif self:GetWalking() and self2.GetStatL(self, "Walk_Mode") ~= TFA.Enum.LOCOMOTION_LUA then
@@ -333,6 +334,7 @@ function SWEP:ChooseIdleAnim()
 	elseif self:GetCustomizing() and self2.GetStatL(self, "Customize_Mode") ~= TFA.Enum.LOCOMOTION_LUA then
 		return self:ChooseCustomizeAnim()
 	end
+	
 
 	if self:GetActivityEnabled(ACT_VM_IDLE_SILENCED) and self2.GetSilenced(self) then
 		typev, tanim = self:ChooseAnimation("idle_silenced")
