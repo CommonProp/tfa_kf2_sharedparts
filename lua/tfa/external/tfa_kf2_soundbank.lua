@@ -408,3 +408,23 @@ do -- 9mm
 		path .. "WEP_SA_9mm_Handling_Rattle_06.ogg"
 	}, ")")
 end 
+
+do -- 9mm
+	path = basepath .. "WEP_1911/"
+	path1 = basepath .. "WEP_Distant/"
+	pref = basepref .. "1911"
+
+	TFA.AddFireSound(pref .. ".Fire", {
+		path .. "1911_Shot_1_Mix.ogg",
+		path .. "1911_Shot_2_Mix.ogg",
+		path .. "1911_Shot_3_Mix.ogg", 
+		path .. "1911_Shot_4_Mix.ogg"
+	}, true, "^"  ) 
+
+	TFA.AddFireSound(pref .. ".EchoFire", {
+		path1 .. "WEP_SA_9mm_Echo_Outdoor_01.ogg", 
+		path1 .. "WEP_SA_9mm_Echo_Outdoor_02.ogg", 
+		path1 .. "WEP_SA_9mm_Echo_Outdoor_03.ogg", 
+		path1 .. "WEP_SA_9mm_Echo_Outdoor_04.ogg"
+	}, true, "^"  )
+end 

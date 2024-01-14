@@ -1,31 +1,13 @@
-SWEP.Base = "tfa_bash_base"
-DEFINE_BASECLASS(SWEP.Base)
+SWEP.Base = "tfa_melee_base"
 
-SWEP.MuzzleAttachment			= "muzzle" 		-- Should be "1" for CSS models or "muzzle" for hl2 models
-SWEP.ShellAttachment			= "shell" 		-- Should be "2" for CSS models or "shell" for hl2 models
-
-SWEP.IronRecoilMultiplier = 0.6 --Multiply recoil by this factor when we're in ironsights.  This is proportional, not inversely.
-SWEP.CrouchAccuracyMultiplier = 0.8 --Less is more.  Accuracy * 0.5 = Twice as accurate, Accuracy * 0.1 = Ten times as accurate
-
-SWEP.Primary.BurstDelay = 0.1 -- Delay between bursts, leave nil to autocalculate
-SWEP.Primary.HullSize = 1 --Big bullets, increase this value.  They increase the hull size of the hitscan bullet.
-SWEP.Primary.Knockback = 0 --Autodetected if nil; this is the velocity kickback
-
-SWEP.TracerCount 		= 1 	--0 disables, otherwise, 1 in X chance
-SWEP.TracerName 		= "kf2_tracer"
-
-SWEP.BlowbackVector         = Vector(0, -50, 0)
-
-SWEP.WalkBobMult_Iron = 0.75
-
-SWEP.DisableChambering = true --Disable round-in-the-chamber
+SWEP.Primary.MaxCombo = 4 --Max amount of times you'll attack by simply holding down the mouse; -1 to unlimit
+SWEP.Secondary.MaxCombo = 1 --Max amount of times you'll attack by simply holding down the mouse; -1 to unlimit
 
 SWEP.IdleInspectDelay = 20 -- delay between random inspects
 SWEP.Idle_Blend                 = 0 -- Start an idle this far early into the end of a transition
 SWEP.Idle_Smooth                = 0 -- Start an idle this far early into the end of another animation
 
 SWEP.MoveSpeed = 1 
-SWEP.IronSightsMoveSpeed = SWEP.MoveSpeed * 0.4
 
 SWEP.Offset = {
 	Pos = {
@@ -54,7 +36,7 @@ SWEP.PickupSound = Sound("TFA_KF2.Generic.PickupWeapon")
 
 SWEP.LuaShellEject = true --Enable shell ejection through lua?
 SWEP.LuaShellEjectDelay = 0.002 --The delay to actually eject things
-SWEP.ShellScale = 1.4
+SWEP.ShellScale = 1
 SWEP.Primary.Sound_DryFire = Sound("TFA_KF2.AK12.DryFire")
 
 SWEP.Primary.EchoFire = nil -- Echo firing sound. Unlike looped firing sounds, this sound will play EACH TIME the gun is fired.
@@ -67,19 +49,16 @@ SWEP.SprintAnimation = {
 	["in"] = {
 		["type"] = TFA.Enum.ANIMATION_SEQ, -- Sequence or act
 		["value"] = "Sprint_in", -- Number for act, String/Number for sequence
-		["value_empty"] = "Sprint_In_Empty",
 		["transition"] = true
 	}, -- Inward transition
 	["loop"] = {
 		["type"] = TFA.Enum.ANIMATION_SEQ, -- Sequence or act
 		["value"] = "Sprint_Loop", -- Number for act, String/Number for sequence
-		["value_empty"] = "Sprint_Loop_Empty",
 		["is_idle"] = true
 	}, -- looping animation
 	["out"] = {
 		["type"] = TFA.Enum.ANIMATION_SEQ, -- Sequence or act
 		["value"] = "Sprint_Out", -- Number for act, String/Number for sequence
-		["value_empty"] = "Sprint_Out_empty",
 		["transition"] = true
 	} -- Outward transition
 }
@@ -111,6 +90,8 @@ SWEP.WalkAnimation = {
 		["is_idle"] = true
 	} -- looping animation
 }
+
+DEFINE_BASECLASS(SWEP.Base)
 
 function SWEP:Initialize(...)
 	self:SetNWFloat("LastIdleInspect", CurTime() + self.IdleInspectDelay)
@@ -250,6 +231,77 @@ function SWEP:Holster(...)
 	return BaseClass.Holster(self, ...)
 end
 
+if SERVER then
+	function SWEP:OwnerChanged(...)
+		if IsValid(self:GetOwner()) and self:GetOwner():IsPlayer() then
+			local pickupsnd = self:GetStat("PickupSound")
+
+			if pickupsnd and pickupsnd ~= "" then
+				self:EmitSound(pickupsnd)
+			end
+		end
+
+		return BaseClass.OwnerChanged(self, ...)
+	end
+
+	function SWEP:EquipAmmo(ply, ...)
+		local pickupsnd = self:GetStat("PickupSound")
+
+		if pickupsnd and pickupsnd ~= "" then
+			self:EmitSound(pickupsnd)
+		end
+
+		return BaseClass.EquipAmmo(self, ply, ...)
+	end
+end
+
+-- you know the drill
+
+function SWEP:Think2(...)
+	if not self:VMIV() then return end
+
+	if (not self:GetOwner():KeyDown(IN_ATTACK)) and (not self:GetOwner():KeyDown(IN_ATTACK2)) then
+		self:SetComboCount(0)
+	end
+
+	if self:GetVP() and CurTime() > self:GetVPTime() then
+		self:SetVP(false)
+		self:SetVPTime(-1)
+		self:GetOwner():ViewPunch(Angle(self:GetVPPitch(), self:GetVPYaw(), self:GetVPRoll()))
+	end
+
+	if self.CanBlock then
+		local stat = self:GetStatus()
+
+		if self:GetBashImpulse() and TFA.Enum.ReadyStatus[stat] and not self:GetOwner():KeyDown(IN_USE) then
+			self:SetStatus(TFA.Enum.STATUS_BLOCKING, math.huge)
+
+			if self.BlockAnimation["in"] then
+				self:PlayAnimation(self.BlockAnimation["in"])
+			elseif self.BlockAnimation["loop"] then
+				self:PlayAnimation(self.BlockAnimation["loop"])
+			end
+
+			self.BlockStart = CurTime()
+		elseif stat == TFA.Enum.STATUS_BLOCKING and not self:GetBashImpulse() then
+			local _, tanim, ttype
+
+			if self.BlockAnimation["out"] then
+				_, tanim, ttype = self:PlayAnimation(self.BlockAnimation["out"])
+			else
+				_, tanim, ttype = self:ChooseIdleAnim()
+			end
+
+			self:ScheduleStatus(TFA.Enum.STATUS_IDLE, self.BlockFadeOut or (self:GetActivityLength(tanim, false, ttype) - self.BlockFadeOutEnd))
+		elseif stat == TFA.Enum.STATUS_BLOCKING and CurTime() > self:GetNextIdleAnim() then
+			self:ChooseIdleAnim()
+		end
+	end
+
+	self:StrikeThink()
+	BaseClass.Think2(self, ...)
+end
+
 local function PlayChosenAnimation(self, typev, tanim, ...)
 	local fnName = typev == TFA.Enum.ANIMATION_SEQ and "SendViewModelSeq" or "SendViewModelAnim"
 	local a, b = self[fnName](self, tanim, ...)
@@ -257,7 +309,6 @@ local function PlayChosenAnimation(self, typev, tanim, ...)
 end
 
 SWEP.PlayChosenAnimation = PlayChosenAnimation
-
 
 function SWEP:ChooseIdleAnim()
 	local self2 = self:GetTable()
@@ -268,7 +319,7 @@ function SWEP:ChooseIdleAnim()
 	--end
 	
     -- Define a list of animations to check
-    local animationsToCheck = {"reload", "shoot", "bash", "out", "equip", "put", "iron", "atk", "settle", "combo"}
+    local animationsToCheck = {"reload", "shoot", "bash", "out", "equip", "put", "iron", "atk", "settle", "combo", "block"}
 
     -- Check if the current activity is in the defined list
     if IsValid(self) and IsValid(self:GetOwner()) and self:GetOwner():IsPlayer() then
@@ -326,6 +377,8 @@ function SWEP:ChooseIdleAnim()
 		else
 			return self:ChooseADSAnim()
 		end
+	elseif self.CanBlock and self:GetStatus() == TFA.Enum.STATUS_BLOCKING and self.BlockAnimation["loop"] then
+     	return self:PlayAnimation(self.BlockAnimation["loop"]) 
 	elseif self:GetSprinting() and self2.GetStatL(self, "Sprint_Mode") ~= TFA.Enum.LOCOMOTION_LUA then
 		return self:ChooseSprintAnim()
 	elseif self:GetWalking() and self2.GetStatL(self, "Walk_Mode") ~= TFA.Enum.LOCOMOTION_LUA then
@@ -333,6 +386,7 @@ function SWEP:ChooseIdleAnim()
 	elseif self:GetCustomizing() and self2.GetStatL(self, "Customize_Mode") ~= TFA.Enum.LOCOMOTION_LUA then
 		return self:ChooseCustomizeAnim()
 	end
+	
 
 	if self:GetActivityEnabled(ACT_VM_IDLE_SILENCED) and self2.GetSilenced(self) then
 		typev, tanim = self:ChooseAnimation("idle_silenced")
@@ -353,26 +407,100 @@ function SWEP:ChooseIdleAnim()
 	return PlayChosenAnimation(self, typev, tanim)
 end
 
-if SERVER then
-	function SWEP:OwnerChanged(...)
-		if IsValid(self:GetOwner()) and self:GetOwner():IsPlayer() then
-			local pickupsnd = self:GetStat("PickupSound")
+-- choose attack anim
 
-			if pickupsnd and pickupsnd ~= "" then
-				self:EmitSound(pickupsnd)
-			end
-		end
+local lvec = Vector(0, 0, 0)
 
-		return BaseClass.OwnerChanged(self, ...)
-	end
+function SWEP:ChooseAttack(tblName)
+    local attacks = self:GetStatL(tblName .. ".Attacks")
+    if not attacks or #attacks <= 0 then 
+        print("ChooseAttack: No attacks found in " .. tblName)
+        return -1 
+    end
 
-	function SWEP:EquipAmmo(ply, ...)
-		local pickupsnd = self:GetStat("PickupSound")
+    local ply = self:GetOwner()
+    if IsValid(ply) and ply:IsPlayer() then
+        lvec.x, lvec.y = 0, 0
 
-		if pickupsnd and pickupsnd ~= "" then
-			self:EmitSound(pickupsnd)
-		end
+        if ply:KeyDown(IN_MOVERIGHT) then
+            lvec.y = lvec.y - 1
+        end
 
-		return BaseClass.EquipAmmo(self, ply, ...)
-	end
+        if ply:KeyDown(IN_MOVELEFT) then
+            lvec.y = lvec.y + 1
+        end
+
+        if ply:KeyDown(IN_FORWARD) then
+            lvec.x = lvec.x + 1
+        end
+
+        if ply:KeyDown(IN_BACK) then
+            lvec.x = lvec.x - 1
+        end
+    end
+
+    local comboCount = self:GetComboCount() + 1
+
+    -- If the player is stationary and it's the first attack of the combo
+    if comboCount == 1 and lvec.x == 0 and lvec.y == 0 then
+        if self.lastStationaryCombo == "L" then
+            self.initialComboDirection = "R"
+            self.lastStationaryCombo = "R"
+        else
+            self.initialComboDirection = "L"
+            self.lastStationaryCombo = "L"
+        end
+    elseif comboCount == 1 then
+        -- Determine the initial movement direction for non-stationary attacks
+        if lvec.y > 0.3 then
+            self.initialComboDirection = "L"
+        elseif lvec.y < -0.3 then
+            self.initialComboDirection = "R"
+        elseif lvec.x > 0.5 then
+            self.initialComboDirection = "F"
+        elseif lvec.x < -0.1 then
+            self.initialComboDirection = "B"
+        else
+            self.initialComboDirection = self.lastStationaryCombo -- Use the last stationary combo as a fallback
+        end
+    end
+
+    -- Define the patterns
+    local patterns = {
+        R = {"L", "CR", "CFR", "CFL"},
+        L = {"R", "CL", "CFL", "CFR"},
+        F = {"F", "CFR", "CFL", "CFR"},
+        B = {"B", "CBL", "CBR", "CBL"}
+    }
+
+    -- Select the pattern based on the initial movement
+    local chosenPattern = patterns[self.initialComboDirection]
+
+    -- Ensure comboCount cycles through the pattern
+    local index = comboCount % #chosenPattern
+    index = index == 0 and #chosenPattern or index
+    local attackDirection = chosenPattern[index]
+
+    print("ChooseAttack: Combo Count = " .. comboCount)
+    print("ChooseAttack: Initial Combo Direction = " .. self.initialComboDirection)
+    print("ChooseAttack: Target Attack = " .. attackDirection)
+
+    local foundAttack = nil
+
+    -- Find the attack matching the target pattern
+    for k, v in pairs(attacks) do
+        if v.direction == attackDirection then
+            print("ChooseAttack: Found matching attack: " .. k)
+            foundAttack = k
+            break
+        end
+    end
+
+    if not foundAttack then 
+        print("ChooseAttack: No matching attacks found for target: " .. attackDirection)
+        return 0 
+    end
+
+    print("ChooseAttack: Selected Attack = " .. foundAttack)
+    return foundAttack, attacks[foundAttack]
 end
