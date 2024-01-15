@@ -465,7 +465,7 @@ do -- Deagle
 	TFA.AddSound(pref .. ".Deploy", CHAN_AUTO, 0.6, 75, 100, path .. "WEP_SA_.ogg" )
 end
 
-do -- 9mm
+do -- 1911
 	path = basepath .. "WEP_1911/"
 	path1 = basepath .. "WEP_Distant/"
 	pref = basepref .. "1911"
@@ -483,4 +483,49 @@ do -- 9mm
 		path1 .. "WEP_SA_9mm_Echo_Outdoor_03.ogg", 
 		path1 .. "WEP_SA_9mm_Echo_Outdoor_04.ogg"
 	}, true, "^"  )
+end
+
+do -- 1858 Revolver
+	path = basepath .. "WEP_SA_1858/"
+	path1 = basepath .. "WEP_Distant/"
+	pref = basepref .. "1858"
+
+	TFA.AddFireSound(pref .. ".Fire", {
+		path .. "1858_Shot_Medium_1.ogg",
+		path .. "1858_Shot_Medium_2.ogg",
+		path .. "1858_Shot_Medium_3.ogg", 
+		path .. "1858_Shot_Medium_4.ogg"
+	}, true, "^"  ) 
+
+	TFA.AddSound(pref .. ".CylinderIn", CHAN_AUTO, 0.6, 75, 100, path .. "1858_Cylinder_In.ogg" )
+	TFA.AddSound(pref .. ".CylinderOut", CHAN_AUTO, 0.6, 75, 100, path .. "1858_Cylinder_Out.ogg" )
+	TFA.AddSound(pref .. ".Hammer", CHAN_AUTO, 0.6, 75, 100, path .. "1858_Hammer.ogg" )
+	TFA.AddSound(pref .. ".PinSlide", CHAN_AUTO, 0.6, 75, 100, path .. "1858_Pin_Slide.ogg" )
+	TFA.AddSound(pref .. ".LeverClose", CHAN_AUTO, 0.6, 75, 100, {
+		path .. "1858_Lever_Close_2.ogg",
+		path .. "1858_Lever_Close_3.ogg",
+		path .. "1858_Lever_Close_4.ogg",
+	}, ")")
+	TFA.AddSound(pref .. ".LeverOpen", CHAN_AUTO, 0.6, 75, 100, {
+		path .. "1858_Lever_Open_2.ogg",
+		path .. "1858_Lever_Open_3.ogg",
+		path .. "1858_Lever_Open_4.ogg",
+	}, ")")
+	TFA.AddSound(pref .. ".HammerBack", CHAN_AUTO, 0.6, 75, 100, {
+		path .. "Hammer_Back_1.ogg",
+		path .. "Hammer_Back_2.ogg",
+		path .. "Hammer_Back_3.ogg",
+		path .. "Hammer_Back_4.ogg",
+		path .. "Hammer_Back_5.ogg",
+		path .. "Hammer_Back_6.ogg",
+	}, ")")
+end
+
+do -- AA12
+	path = basepath .. "WEP_SA_AA12/"
+	pref = basepref .. "AA12"
+	
+	TFA.AddSound(pref .. ".Dryfire", CHAN_AUTO, 0.6, 75, 100, path .. "WEP_SA_AA12_Handling_DryFire.ogg" )
+	TFA.AddSound(pref .. ".Equip", CHAN_AUTO, 0.6, 75, 100, path .. "WEP_SA_AA12_Handling_Equip.ogg" )
+	TFA.AddSound(pref .. ".Unequip", CHAN_AUTO, 0.6, 75, 100, path .. "WEP_SA_AA12_Handling_Unequip.ogg" )
 end 
