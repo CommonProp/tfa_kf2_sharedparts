@@ -22,11 +22,10 @@ ATTACHMENT.WeaponTable = {
 
 
 function ATTACHMENT:CanAttach(wep)
-	if engine.ActiveGamemode() == "zombiesurvival" then -- in zs
-		if wep:GetOwner():GetPoints() < self.PointCost then return false end -- higher tier level equipped or can't afford, disregard
-	else -- in sandbox
-		return true
+	if engine.ActiveGamemode() == "zombiesurvival" then
+		if wep:GetOwner():GetPoints() < self.PointCost then return false end -- can't afford
 	end
+	return true -- nothing is equipped, always allow this one
 end
 
 function ATTACHMENT:Attach(wep)
