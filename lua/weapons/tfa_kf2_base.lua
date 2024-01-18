@@ -270,7 +270,7 @@ function SWEP:ChooseIdleAnim()
     local animationsToCheck = {"reload", "shoot", "bash", "equip", "put", "atk", "settle", "combo", "block"}
 
     -- Check if the current activity is in the defined list
-    if IsValid(self) and IsValid(self:GetOwner()) and self:GetOwner():IsPlayer() then
+    if IsValid(self) and IsValid(self:GetOwner()) and self:GetOwner():IsPlayer() and self:GetIronSightsProgress() <= 0.01 then
         local viewModel = self:GetOwner():GetViewModel()
         if IsValid(viewModel) then
             local sequenceIndex = viewModel:GetSequence()
@@ -353,6 +353,93 @@ function SWEP:ChooseIdleAnim()
 	--  return
 	--end
 	return PlayChosenAnimation(self, typev, tanim)
+end
+
+function SWEP:FixCylinderRotation(useTotalAmmo, akimbo, boneName)
+    local viewModel = self.Owner:GetViewModel()
+    if not IsValid(viewModel) then return end
+
+    local boneIndex = viewModel:LookupBone(boneName)
+    if not boneIndex then return end
+
+    self.isRotating = false
+
+    local clipSize = self.Primary.ClipSize
+    local ammoCount
+    if useTotalAmmo then
+        ammoCount = self:Clip1() + self:Ammo1()
+    else
+        ammoCount = self:Clip1()
+    end 
+
+    local shotsFired, rotationDegrees
+
+    if akimbo then
+        -- Logic for akimbo weapons
+        shotsFired = clipSize - math.Clamp(ammoCount, 0, clipSize)
+        rotationDegrees = 60 * math.floor(shotsFired / 2) + 1
+    else
+        -- Logic for single weapons
+        shotsFired = (clipSize - 1) - math.Clamp(ammoCount, 0, clipSize)
+        rotationDegrees = 60 * shotsFired
+    end
+
+    -- Instantly set the bone angle to the fixed position
+    local angle = Angle(0, 0, rotationDegrees)
+    viewModel:ManipulateBoneAngles(boneIndex, angle)
+end
+
+function SWEP:UpdateCylinderRotation(useTotalAmmo, akimbo, rotDuration, boneName)
+    local viewModel = self.Owner:GetViewModel()
+    if not IsValid(viewModel) then return end
+
+    local boneIndex = viewModel:LookupBone(boneName)
+    if not boneIndex then return end
+
+    local clipSize = self.Primary.ClipSize or 12  -- Default to 12 if not defined
+    local ammoCount
+    if useTotalAmmo then
+        ammoCount = self:Clip1() + self:Ammo1()
+    else
+        ammoCount = self:Clip1()
+    end 
+
+    local shotsFired, rotationDegrees
+
+    if akimbo then
+        -- Logic for akimbo weapons
+        shotsFired = (clipSize + 1) - math.Clamp(ammoCount, 0, clipSize)
+        rotationDegrees = 60 * math.floor(shotsFired / 2)
+    else
+        -- Logic for single weapons
+        shotsFired = clipSize - math.Clamp(ammoCount, 0, clipSize)
+        rotationDegrees = 60 * shotsFired
+    end
+
+    self.targetRotationDegrees = rotationDegrees
+    self.rotationStartTime = CurTime()
+    self.rotationDuration = rotDuration
+    self.isRotating = true
+    self.rotatingBoneName = boneName
+end
+
+function SWEP:ViewModelDrawn()
+    local viewModel = self.Owner:GetViewModel()
+    if not IsValid(viewModel) or not self.isRotating then return end
+
+    local boneIndex = viewModel:LookupBone(self.rotatingBoneName)
+    if not boneIndex then return end
+
+    local currentAngle = viewModel:GetManipulateBoneAngles(boneIndex)
+    local targetAngle = Angle(0, 0, self.targetRotationDegrees)
+    local timeFraction = math.Clamp((CurTime() - self.rotationStartTime) / self.rotationDuration, 0, 1)
+    local newAngle = LerpAngle(timeFraction, currentAngle, targetAngle)
+
+    viewModel:ManipulateBoneAngles(boneIndex, newAngle)
+
+    if timeFraction >= 1 then
+        self.isRotating = false  -- Stop updating once the target angle is reached
+    end
 end
 
 if SERVER then
