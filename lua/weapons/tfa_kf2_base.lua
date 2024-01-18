@@ -423,7 +423,11 @@ function SWEP:UpdateCylinderRotation(useTotalAmmo, akimbo, rotDuration, boneName
     self.rotatingBoneName = boneName
 end
 
-function SWEP:ViewModelDrawn()
+function SWEP:ViewModelDrawn(...)
+    -- Call the base class function
+    BaseClass.ViewModelDrawn(self, ...)
+    
+    -- Your custom ViewModelDrawn logic
     local viewModel = self.Owner:GetViewModel()
     if not IsValid(viewModel) or not self.isRotating then return end
 
