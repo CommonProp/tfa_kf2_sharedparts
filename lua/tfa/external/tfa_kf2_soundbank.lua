@@ -418,7 +418,7 @@ do -- Deagle
 		path .. "DE_Shot_Medium_1.ogg",
 		path .. "DE_Shot_Medium_2.ogg",
 		path .. "DE_Shot_Medium_3.ogg", 
-		path .. "DE_Shot_Medium_3.ogg",
+		path .. "DE_Shot_Medium_4.ogg",
 		path .. "DE_Shot_Small_1.ogg",
 		path .. "DE_Shot_Small_2.ogg",
 		path .. "DE_Shot_Small_3.ogg", 
