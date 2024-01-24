@@ -528,4 +528,26 @@ do -- AA12
 	TFA.AddSound(pref .. ".Dryfire", CHAN_AUTO, 0.6, 75, 100, path .. "WEP_SA_AA12_Handling_DryFire.ogg" )
 	TFA.AddSound(pref .. ".Equip", CHAN_AUTO, 0.6, 75, 100, path .. "WEP_SA_AA12_Handling_Equip.ogg" )
 	TFA.AddSound(pref .. ".Unequip", CHAN_AUTO, 0.6, 75, 100, path .. "WEP_SA_AA12_Handling_Unequip.ogg" )
-end 
+end
+
+do -- AF2011 
+	path = basepath .. "WEP_AF2011/"
+	pref = basepref .. "AF2011"
+
+	TFA.AddFireSound(pref .. ".Fire", {
+		path .. "AF2011_Shot_Test.ogg",
+//		path .. "MP5_Single_3_Mix.ogg",
+//		path .. "MP5_Single_4_Mix.ogg"
+	}, true, "^"  ) 
+
+	TFA.AddSound(pref .. ".Slide", CHAN_AUTO, 0.6, 75, 100, path .. "WEP_AF2011_Reload_Full_Slide.ogg")
+	TFA.AddSound(pref .. ".SlideBackInspect", CHAN_AUTO, 0.6, 75, 100, path .. "WEP_AF2011_Slide_Check_Back.ogg")
+	TFA.AddSound(pref .. ".SlideForwardInspect", CHAN_AUTO, 0.6, 75, 100, path .. "WEP_AF2011_Slide_Check_FWD.ogg")
+	TFA.AddSound(pref .. ".MagOutHalf", CHAN_AUTO, 0.6, 75, 100, path .. "WEP_AF2011_Reload_Half_Out.ogg")
+	TFA.AddSound(pref .. ".MagInHalf", CHAN_AUTO, 0.6, 75, 100, path .. "WEP_AF2011_Reload_Half_In.ogg")
+	TFA.AddSound(pref .. ".MagOut", CHAN_AUTO, 0.6, 75, 100, path .. "WEP_AF2011_Reload_Full_Out.ogg")
+	TFA.AddSound(pref .. ".MagIn", CHAN_AUTO, 0.6, 75, 100, path .. "WEP_AF2011_Reload_Full_In.ogg")
+	TFA.AddSound(pref .. ".MagOutInspect", CHAN_AUTO, 0.6, 75, 100, path .. "WEP_AF2011_Mag_Check_Out.ogg")
+	TFA.AddSound(pref .. ".MagInInspect1", CHAN_AUTO, 0.6, 75, 100, path .. "WEP_AF2011_Mag_Check_In_1.ogg")
+	TFA.AddSound(pref .. ".MagInInspect2", CHAN_AUTO, 0.6, 75, 100, path .. "WEP_AF2011_Mag_Check_In_2.ogg")
+end
