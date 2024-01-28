@@ -535,7 +535,7 @@ do -- AF2011
 	pref = basepref .. "AF2011"
 
 	TFA.AddFireSound(pref .. ".Fire", {
-		path .. "AF2011_Shot_Test.ogg",
+		path .. "AF2011_Shot_Test2.ogg",
 //		path .. "MP5_Single_3_Mix.ogg",
 //		path .. "MP5_Single_4_Mix.ogg"
 	}, true, "^"  ) 
