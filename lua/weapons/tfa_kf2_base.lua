@@ -355,7 +355,7 @@ function SWEP:ChooseIdleAnim()
 	return PlayChosenAnimation(self, typev, tanim)
 end
 
-function SWEP:FixCylinderRotation(useTotalAmmo, akimbo, boneName)
+function SWEP:FixCylinderRotation(useTotalAmmo, boneName, rotationValue)
     local viewModel = self.Owner:GetViewModel()
     if not IsValid(viewModel) then return end
 
@@ -365,23 +365,30 @@ function SWEP:FixCylinderRotation(useTotalAmmo, akimbo, boneName)
     self.isRotating = false
 
     local clipSize = self.Primary.ClipSize
-    local ammoCount
-    if useTotalAmmo then
-        ammoCount = self:Clip1() + self:Ammo1()
+    local ammoCount = useTotalAmmo and (self:Clip1() + self:Ammo1()) or self:Clip1()
+
+    local shotsFired
+    local rotationDegrees = 0
+    local isAkimbo = viewModel:LookupBone("LW_Cylinder") ~= nil
+
+    -- Determine the adjustment based on the firing pattern and bone name
+    local isRightGun = boneName == "RW_Cylinder"
+    local isLeftGun = boneName == "LW_Cylinder"
+
+    if isAkimbo then
+        if isRightGun then
+            -- Akimbo right gun logic
+            shotsFired = math.ceil((clipSize - ammoCount) / 2)
+            rotationDegrees = rotationValue * math.Clamp(shotsFired, 0, clipSize)
+        elseif isLeftGun then
+            -- Akimbo left gun logic
+            shotsFired = math.floor((clipSize - ammoCount) / 2)
+            rotationDegrees = rotationValue * math.Clamp(shotsFired, 0, clipSize)
+        end
     else
-        ammoCount = self:Clip1()
-    end 
-
-    local shotsFired, rotationDegrees
-
-    if akimbo then
-        -- Logic for akimbo weapons
+        -- Non-akimbo logic
         shotsFired = clipSize - math.Clamp(ammoCount, 0, clipSize)
-        rotationDegrees = 60 * math.floor(shotsFired / 2) + 1
-    else
-        -- Logic for single weapons
-        shotsFired = (clipSize - 1) - math.Clamp(ammoCount, 0, clipSize)
-        rotationDegrees = 60 * shotsFired
+        rotationDegrees = rotationValue * shotsFired
     end
 
     -- Instantly set the bone angle to the fixed position
@@ -389,7 +396,7 @@ function SWEP:FixCylinderRotation(useTotalAmmo, akimbo, boneName)
     viewModel:ManipulateBoneAngles(boneIndex, angle)
 end
 
-function SWEP:UpdateCylinderRotation(useTotalAmmo, akimbo, rotDuration, boneName)
+function SWEP:UpdateCylinderRotation(useTotalAmmo, mode, rotDuration, boneName, rotationValue)
     local viewModel = self.Owner:GetViewModel()
     if not IsValid(viewModel) then return end
 
@@ -402,18 +409,25 @@ function SWEP:UpdateCylinderRotation(useTotalAmmo, akimbo, rotDuration, boneName
         ammoCount = self:Clip1() + self:Ammo1()
     else
         ammoCount = self:Clip1()
-    end 
+    end
 
     local shotsFired, rotationDegrees
 
-    if akimbo then
-        -- Logic for akimbo weapons
+    if mode == 1 then
+        -- Adjusted logic for akimbo weapons
         shotsFired = (clipSize + 1) - math.Clamp(ammoCount, 0, clipSize)
-        rotationDegrees = 60 * math.floor(shotsFired / 2)
-    else
-        -- Logic for single weapons
+        rotationDegrees = rotationValue * math.floor(shotsFired / 2)
+    elseif mode == 2 then
+        -- Adjusted logic for single weapons
         shotsFired = clipSize - math.Clamp(ammoCount, 0, clipSize)
-        rotationDegrees = 60 * shotsFired
+        rotationDegrees = rotationValue * shotsFired
+    elseif mode == 3 then
+        -- Resets rotation to rotationDegrees
+        rotationDegrees = rotationValue
+    elseif mode == 4 then
+        -- Single weapon rotate with offset
+        shotsFired = clipSize - math.Clamp(ammoCount, 0, clipSize)
+        rotationDegrees = (rotationValue * shotsFired) + rotationValue
     end
 
     self.targetRotationDegrees = rotationDegrees
@@ -443,6 +457,33 @@ function SWEP:ViewModelDrawn(...)
 
     if timeFraction >= 1 then
         self.isRotating = false  -- Stop updating once the target angle is reached
+    end
+end
+
+function SWEP:UpdateTotalAmmoBodygroups(mode, useTotalAmmo)
+    -- Determine the actual clip size and calculate half size dynamically
+    local clipSize = self.Primary.ClipSize
+    local halfClipSize = math.ceil(clipSize / 2) -- Use ceil to handle odd numbers
+
+    -- Determine ammo count based on whether to use total ammo or just clip
+    local ammoCount = useTotalAmmo and math.Clamp(self:Clip1() + self:Ammo1(), 0, clipSize) or math.Clamp(self:Clip1(), 0, clipSize)
+    local rightGunAmmo, leftGunAmmo
+
+    if mode == 1 then
+        -- Mode 1: Update both guns based on the ammo count
+        rightGunAmmo = math.floor(ammoCount / 2)
+        leftGunAmmo = math.ceil(ammoCount / 2)
+        -- Calculate the variant index dynamically based on the half clip size
+        self.Bodygroups_V[1] = halfClipSize - rightGunAmmo
+        self.Bodygroups_V[2] = halfClipSize - leftGunAmmo
+    elseif mode == 2 then
+        -- Mode 3: Update right gun only
+        rightGunAmmo = math.Clamp(ammoCount - halfClipSize, 0, halfClipSize) -- Consider half clip size for distribution
+        self.Bodygroups_V[1] = halfClipSize - rightGunAmmo
+    elseif mode == 3 then
+        -- Mode 2: Update left gun only
+        leftGunAmmo = math.Clamp(ammoCount, 0, halfClipSize)
+        self.Bodygroups_V[2] = halfClipSize - leftGunAmmo
     end
 end
 
