@@ -53,7 +53,7 @@ SWEP.HolsterSound = Sound("TFA_KF2.Generic.ClothMedium")
 SWEP.PickupSound = Sound("TFA_KF2.Generic.PickupWeapon")
 
 SWEP.LuaShellEject = true --Enable shell ejection through lua?
-SWEP.LuaShellEjectDelay = 0.002 --The delay to actually eject things
+SWEP.LuaShellEjectDelay = 0 --The delay to actually eject things
 SWEP.ShellScale = 1.4
 SWEP.Primary.Sound_DryFire = Sound("TFA_KF2.AK12.DryFire")
 
@@ -165,6 +165,27 @@ function SWEP:KF2DropMag(handValue)  -- CALL ONLY IN PREDICTED HOOKS/FUNCTIONS L
     efdata:SetScale(handValue)
             
     util.Effect("tfa_kf2_dropped_mag", efdata)
+end
+
+function SWEP:KF2DropShells(mode)
+    local shotsFired = self.Primary.ClipSize - self:Clip1()
+
+    -- Adjust the number of shots fired based on the mode
+    if mode == 1 then
+        -- Normal mode, round up to ensure all shots are accounted for
+        shotsFired = math.ceil(shotsFired)
+    elseif mode == 2 then
+        -- Right gun of akimbo, round up since it may fire an extra shot
+        shotsFired = math.ceil(shotsFired / 2)
+    elseif mode == 3 then
+        -- Left gun of akimbo, round down as it may fire one less shot
+        shotsFired = math.floor(shotsFired / 2)
+    end
+    
+    -- Call EventShell for the calculated number of shots fired
+    for i = 1, shotsFired do
+        self:EventShell()
+    end
 end
 
 function SWEP:PreDrawViewModel(...)
