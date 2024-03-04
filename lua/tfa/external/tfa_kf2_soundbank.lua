@@ -551,3 +551,107 @@ do -- AF2011
 	TFA.AddSound(pref .. ".MagInInspect1", CHAN_AUTO, 0.6, 75, 100, path .. "WEP_AF2011_Mag_Check_In_1.ogg")
 	TFA.AddSound(pref .. ".MagInInspect2", CHAN_AUTO, 0.6, 75, 100, path .. "WEP_AF2011_Mag_Check_In_2.ogg")
 end
+
+do -- SW500
+	path = basepath .. "WEP_SA_SW500/"
+	path1 = basepath .. "WEP_Distant/"
+	pref = basepref .. "SW500"
+
+	TFA.AddFireSound(pref .. ".Fire", {
+		path .. "SW500_Shot_Outdoor_1.ogg",
+		path .. "SW500_Shot_Outdoor_2.ogg",
+		path .. "SW500_Shot_Outdoor_3.ogg", 
+		path .. "SW500_Shot_Outdoor_4.ogg"
+	}, true, "^"  ) 
+
+	TFA.AddSound(pref .. ".CylinderOpen", CHAN_AUTO, 0.6, 75, 100, path .. "SW500_Cylinder_Open.ogg" )
+	TFA.AddSound(pref .. ".CylinderClose", CHAN_AUTO, 0.6, 75, 100, path .. "SW500_Cylinder_Close.ogg" )
+	TFA.AddSound(pref .. ".CylinderSnap", CHAN_AUTO, 0.6, 75, 100, path .. "SW500_Cylinder_Snap.ogg" )
+	TFA.AddSound(pref .. ".SpeedloaderIn", CHAN_AUTO, 0.6, 75, 100, path .. "SW500_Speedloader_In.ogg" )
+	TFA.AddSound(pref .. ".Empty", CHAN_AUTO, 0.6, 75, 100, {
+		path .. "SW500_Empty_1.ogg",
+		path .. "SW500_Empty_2.ogg",
+	}, ")")
+	TFA.AddSound(pref .. ".Tap", CHAN_AUTO, 0.6, 75, 100, {
+		path .. "SW500_Tap.ogg",
+//		path .. "SW500_Tap_2.ogg",
+	}, ")")
+	TFA.AddSound(pref .. ".Hammer", CHAN_AUTO, 0.6, 75, 100, {
+		path .. "SW500_Hammer_2.ogg",
+		path .. "SW500_Hammer_2.ogg",
+	}, ")")
+end
+
+do -- Rhino
+	path = basepath .. "WEP_ChiappaRhinos/"
+	path1 = basepath .. "WEP_Distant/"
+	pref = basepref .. "Rhino"
+
+	TFA.AddFireSound(pref .. ".Fire", {
+		path .. "WEP_ChiappaRhinos_Shot_01.ogg",
+		path .. "WEP_ChiappaRhinos_Shot_02.ogg",
+		path .. "WEP_ChiappaRhinos_Shot_03.ogg", 
+		path .. "WEP_ChiappaRhinos_Shot_04.ogg"
+	}, true, "^"  ) 
+
+	TFA.AddSound(pref .. ".Deploy", CHAN_AUTO, 0.6, 75, 100, {
+		path .. "WEP_ChiappaRhinos_Handling_Equip_01.ogg",
+		path .. "WEP_ChiappaRhinos_Handling_Equip_02.ogg",
+		path .. "WEP_ChiappaRhinos_Handling_Equip_03.ogg",
+	}, ")")
+	TFA.AddSound(pref .. ".Holster", CHAN_AUTO, 0.6, 75, 100, {
+		path .. "WEP_ChiappaRhinos_Handling_PutAway_01.ogg",
+		path .. "WEP_ChiappaRhinos_Handling_PutAway_02.ogg",
+	}, ")")
+	TFA.AddSound(pref .. ".Rustle", CHAN_AUTO, 0.6, 75, 100, {
+		path .. "WEP_ChiappaRhinos_Handling_Rustle_01.ogg",
+		path .. "WEP_ChiappaRhinos_Handling_Rustle_02.ogg",
+		path .. "WEP_ChiappaRhinos_Handling_Rustle_03.ogg",
+		path .. "WEP_ChiappaRhinos_Handling_Rustle_04.ogg",
+		path .. "WEP_ChiappaRhinos_Handling_Rustle_05.ogg",
+		path .. "WEP_ChiappaRhinos_Handling_Rustle_06.ogg",
+		path .. "WEP_ChiappaRhinos_Handling_Rustle_07.ogg",
+	}, ")")
+	TFA.AddSound(pref .. ".CylinderOpen", CHAN_AUTO, 0.6, 75, 100, {
+		path .. "WEP_ChiappaRhinos_Reload_ChamberOpen_01.ogg",
+		path .. "WEP_ChiappaRhinos_Reload_ChamberOpen_02.ogg",
+		path .. "WEP_ChiappaRhinos_Reload_ChamberOpen_03.ogg",
+	}, ")")
+	TFA.AddSound(pref .. ".CylinderClose", CHAN_AUTO, 0.6, 75, 100, {
+		path .. "WEP_ChiappaRhinos_Reload_ChamberClose_01.ogg",
+		path .. "WEP_ChiappaRhinos_Reload_ChamberClose_02.ogg",
+		path .. "WEP_ChiappaRhinos_Reload_ChamberClose_03.ogg",
+	}, ")")
+	TFA.AddSound(pref .. ".SpeedloaderIn", CHAN_AUTO, 0.6, 75, 100, {
+		path .. "WEP_ChiappaRhinos_Reload_InsertBullets_01.ogg",
+		path .. "WEP_ChiappaRhinos_Reload_InsertBullets_02.ogg",
+		path .. "WEP_ChiappaRhinos_Reload_InsertBullets_03.ogg",
+		path .. "WEP_ChiappaRhinos_Reload_InsertBullets_04.ogg",
+		path .. "WEP_ChiappaRhinos_Reload_InsertBullets_05.ogg",
+		path .. "WEP_ChiappaRhinos_Reload_InsertBullets_06.ogg",
+	}, ")")
+	TFA.AddSound(pref .. ".Empty", CHAN_AUTO, 0.6, 75, 100, {
+		path .. "WEP_ChiappaRhinos_Handling_EmptyBullets_04.ogg",
+		path .. "WEP_ChiappaRhinos_Handling_EmptyBullets_06.ogg",
+	}, ")")
+	TFA.AddSound(pref .. ".Hammer", CHAN_AUTO, 0.6, 75, 100, {
+		path .. "WEP_ChiappaRhinos_Cock_01.ogg",
+		path .. "WEP_ChiappaRhinos_Cock_02.ogg",
+		path .. "WEP_ChiappaRhinos_Cock_03.ogg",
+		path .. "WEP_ChiappaRhinos_Cock_04.ogg",
+		path .. "WEP_ChiappaRhinos_Cock_05.ogg",
+		path .. "WEP_ChiappaRhinos_Cock_06.ogg",
+		path .. "WEP_ChiappaRhinos_Cock_07.ogg",
+	}, ")")
+	TFA.AddSound(pref .. ".Spin", CHAN_AUTO, 0.6, 75, 100, path .. "WEP_ChiappaRhinos_Handling_Spin_01.wav" )
+	TFA.AddSound(pref .. ".EliteReloadSpin", CHAN_AUTO, 0.6, 75, 100, path .. "WEP_ChiappaRhinos_EliteReload_Spin_01.ogg" )
+	TFA.AddSound(pref .. ".Guncheck01_A", CHAN_AUTO, 0.6, 75, 100, path .. "WEP_ChiappaRhinos_Handling_GunCheck01_A.ogg" )
+	TFA.AddSound(pref .. ".Guncheck01_B", CHAN_AUTO, 0.6, 75, 100, path .. "WEP_ChiappaRhinos_Handling_GunCheck01_B.ogg" )
+	TFA.AddSound(pref .. ".Guncheck02", CHAN_AUTO, 0.6, 75, 100, path .. "WEP_ChiappaRhinos_Handling_GunCheck02.ogg" )
+	TFA.AddSound(pref .. ".Guncheck03", CHAN_AUTO, 0.6, 75, 100, path .. "WEP_ChiappaRhinos_Handling_GunCheck03.ogg" )
+	TFA.AddSound(pref .. ".DualGuncheckSpin1_A", CHAN_AUTO, 0.6, 75, 100, path .. "WEP_ChiappaRhinos_Dual_Handling_GunCheck1_SpinA.wav" )
+	TFA.AddSound(pref .. ".DualGuncheckSpin1_B", CHAN_AUTO, 0.6, 75, 100, path .. "WEP_ChiappaRhinos_Dual_Handling_GunCheck1_SpinB.wav" )
+	TFA.AddSound(pref .. ".DualGuncheckSpin1_C", CHAN_AUTO, 0.6, 75, 100, path .. "WEP_ChiappaRhinos_Dual_Handling_GunCheck1_SpinC.wav" )
+	TFA.AddSound(pref .. ".DualGuncheckSpin3_A", CHAN_AUTO, 0.6, 75, 100, path .. "WEP_ChiappaRhinos_Dual_Handling_GunCheck3_SpinA.wav" )
+	TFA.AddSound(pref .. ".DualGuncheckSpin3_B", CHAN_AUTO, 0.6, 75, 100, path .. "WEP_ChiappaRhinos_Dual_Handling_GunCheck3_SpinB.wav" )
+end
