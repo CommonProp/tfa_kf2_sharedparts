@@ -38,4 +38,4 @@ end
 
 hook.Add("InitPostEntity", "INSTALL TFA BASE_KF2", checkForTFA)
 
-TFA_KF2_SharedParts = false -- flag this as installed properly
+TFA_KF2_SharedParts = true -- flag this as installed properly
